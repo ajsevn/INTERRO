@@ -1,0 +1,111 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  role      UserRole
+  createdAt DateTime @default(now())
+
+  interviews Interview[] // One user can have multiple interviews
+  Response   Response[]
+  Session    Session[]
+}
+
+enum UserRole {
+  ADMIN
+  CANDIDATE
+}
+
+model Interview {
+  id        String          @id @default(uuid())
+  userId    String
+  jobRoleId String
+  status    InterviewStatus @default(PENDING) // PENDING, ONGOING, COMPLETED
+  score     Float?
+  createdAt DateTime        @default(now())
+
+  user      User       @relation(fields: [userId], references: [id])
+  jobRole   JobRole    @relation(fields: [jobRoleId], references: [id])
+  questions Question[]
+  responses Response[]
+}
+
+enum InterviewStatus {
+  PENDING
+  ONGOING
+  COMPLETED
+}
+
+model Question {
+  id          String       @id @default(uuid())
+  interviewId String
+  text        String
+  type        QuestionType // TEXT, AUDIO, VIDEO
+  createdAt   DateTime     @default(now())
+
+  interview Interview  @relation(fields: [interviewId], references: [id])
+  responses Response[]
+}
+
+enum QuestionType {
+  TEXT
+  AUDIO
+  VIDEO
+}
+
+model Response {
+  id          String   @id @default(uuid())
+  questionId  String
+  userId      String
+  interviewId String
+  answer      String
+  score       Float?
+  createdAt   DateTime @default(now())
+
+  question  Question  @relation(fields: [questionId], references: [id])
+  user      User      @relation(fields: [userId], references: [id])
+  interview Interview @relation(fields: [interviewId], references: [id])
+  feedback  Feedback? // ✅ Make this optional
+}
+
+model Feedback {
+  id         String   @id @default(uuid())
+  responseId String   @unique // ✅ Ensure it's unique
+  text       String
+  createdAt  DateTime @default(now())
+
+  response Response @relation(fields: [responseId], references: [id])
+}
+
+model JobRole {
+  id          String   @id @default(uuid())
+  title       String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+
+  interviews Interview[]
+}
+
+model Admin {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+
+  user User @relation(fields: [userId], references: [id])
+}
