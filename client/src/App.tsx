@@ -1,13 +1,14 @@
-import React from 'react';
-import './App.css';
+import React from "react";
+import { BrowserRouter } from "react-router-dom";
+import AppRoutes from "./routes/AppRoutes";
 
 function App() {
   return (
-    <div className="text-center p-4">
-      <h1 className="text-3xl font-bold">Interro 🚀</h1>
-    </div>
+    <BrowserRouter>
+      <AppRoutes />
+    </BrowserRouter>
+    
   );
 }
 
 export default App;
-
