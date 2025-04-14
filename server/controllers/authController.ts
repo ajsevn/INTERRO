@@ -15,12 +15,12 @@ if (!JWT_SECRET) {
 // Extend Express Request Type to Include `user`
 declare module "express" {
     interface Request {
-        user?: { userId: number; email: string; role: string };
+        user?: { userId: string; email: string; role: string };
     }
 }
 
 // Helper function to generate JWT token
-const generateToken = (userId: number, email: string, role: string) => {
+const generateToken = (userId: string, email: string, role: string) => {
     return jwt.sign({ userId, email, role }, JWT_SECRET as string, { expiresIn: "1h" });
 };
 

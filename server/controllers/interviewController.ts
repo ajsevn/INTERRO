@@ -14,7 +14,9 @@ export const createInterview = async (req: Request, res: Response): Promise<void
 
         const newInterview = await prisma.interview.create({
             data: {
-                userId,   // assuming UUID string\n                jobRole,  // could be an ID or title\n                questions: { create: questions },
+                user: { connect: { id: userId } },
+                jobRole,
+                questions: { create: questions },
             },
         });
 

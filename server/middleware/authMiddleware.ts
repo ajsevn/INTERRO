@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 interface DecodedUser {
-    userId: number;
+    userId: string;
     email: string;
     role: "CANDIDATE" | "ADMIN"; // Adjust roles as needed
 }

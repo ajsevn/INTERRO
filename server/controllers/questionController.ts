@@ -46,8 +46,8 @@ export const generateQuestions = async (req: Request, res: Response): Promise<vo
     */
     // For now, we simulate generated questions:
     const generatedQuestions = [
-      { text: "What is your greatest strength?", type: "TEXT" },
-      { text: "Tell me about a challenging project.", type: "TEXT" }
+      { text: "What is your greatest strength?", type: "TEXT" as const },
+      { text: "Tell me about a challenging project.", type: "TEXT" as const }
     ];
 
     // Save generated questions in the database associated with the interview.
